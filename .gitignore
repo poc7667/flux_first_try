@@ -1,3 +1,5 @@
+*.hot-update.jso*
+
 bundle.js
 bundle.js.map
 this_bundle.js
