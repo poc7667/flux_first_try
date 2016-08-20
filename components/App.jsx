@@ -6,7 +6,9 @@ class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            balance: 0
+            balance: 0,
+            isError: false,
+            errMsg: ""
         };
     }
 
@@ -22,7 +24,15 @@ class App extends React.Component {
     }
     
     handleStoreChange() {
-        this.setState({balance: BankReducerStore.getState()});
+        var resp = BankReducerStore.getState();
+        console.log(resp.balance);
+        if (resp.state){
+            this.setState({isError: false});
+            this.setState({balance: resp.balance});
+        }else{
+            this.setState({isError: true});
+            this.setState({errMsg: resp.msg});
+        }
     }
     
     deposit() {
@@ -36,10 +46,19 @@ class App extends React.Component {
     }
     
     render() {
+        var showError;
+        if (this.state.isError) {
+            showError = <h1 id="banner" className="error">{this.state.errMsg}</h1>;
+        } else {
+            showError = "";
+        }
+
         return (
             <div>
                 <header>UCSC Bank</header>
                 <h1>Your balance is ${(this.state.balance).toFixed(2)}</h1>
+                {showError}
+                {/*{JSON.stringify(this.state)}*/}
                 <div className="atm">
                     <input type="text" placeholder="Enter Amount"
                         ref={(comp) => this.amount = comp}/>
